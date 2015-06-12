@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Net;
-using System.Net.Socket;
-
+using System.Net.Sockets;
+using System.Threading;
 namespace DropIt
 {
   class ServerHandling
@@ -22,7 +22,7 @@ namespace DropIt
       IPAddress ServerIP = IPAddress.Parse(IPAddressOfServer);
       IPEndPoint ie = new IPEndPoint(ServerIP,2040);
       enc = new Encryption(Password);
-      Server = new Socket(Addre ssFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
+      Server = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
       try
       {
         Server.Connect(ie);
@@ -37,7 +37,7 @@ namespace DropIt
         ASCIIEncoding en = new ASCIIEncoding();
         //inform the server about the user and check the Password
         string WelcomeMessage = UserName + ";" + Password;
-        byte[] WelcomeByte = enc.GetBytes(WelcomeMessage);
+        byte[] WelcomeByte = en.GetBytes(WelcomeMessage);
         Server.Send(WelcomeByte);
         //now wait for the result of the server
         byte[] resultOfPasswordCheck = new Byte[1];
@@ -56,7 +56,7 @@ namespace DropIt
             Server.Receive(Buffer);
             byte[] Backup = FileListBuffer;
             FileListBuffer = new byte[Length];
-            for(int i = 0; i < Backup; i++)
+            for(int i = 0; i < Backup.Length; i++)
             {
               FileListBuffer[i] = Backup[i];
             }
@@ -69,21 +69,21 @@ namespace DropIt
           string FileListInString = en.GetString(FileListBuffer);
           string[] FileListSeperated = seperateMessage(FileListInString);
           string[] currentBracket = new string[0];
-          for(int i = 0; i < FileListSeperated ; i++)
+          for(int i = 0; i < FileListSeperated.Length ; i++)
           {
-            if(currentBracket.Lenght == 3)
+            if(currentBracket.Length == 3)
             {
               string[,] backup = Filelist;
-              int NewArraySize = (Filelist.Lenght/3) + 1;
+              int NewArraySize = (Filelist.Length/3) + 1;
               Filelist = new string[NewArraySize,3];
-              for(int k = 0; k < NewArraySize - 1)
+              for (int k = 0; k < NewArraySize - 1; k++)
               {
-                for(int j = 0; j < 3; j++)
-                {
-                  Filelist[k,j] = backup[k,j];
-                }
+                  for (int j = 0; j < 3; j++)
+                  {
+                      Filelist[k, j] = backup[k, j];
+                  }
               }
-              for(int k = 0; K < currentBracket.Lenght; k++)
+              for(int k = 0; k < currentBracket.Length; k++)
               {
                 Filelist[NewArraySize -1,k] = currentBracket[k];
               }
@@ -91,12 +91,12 @@ namespace DropIt
             else
             {
               string[] backup = currentBracket;
-              currentBracket = new string[backup.Lenght + 1];
-              for(int k = 0; k < backup.Lenght; k++)
+              currentBracket = new string[backup.Length + 1];
+              for(int k = 0; k < backup.Length; k++)
               {
                 currentBracket[k] = backup[k];
               }
-              currentBracket[backup.Lenght + 1] = FileListSeperated[i];
+              currentBracket[backup.Length + 1] = FileListSeperated[i];
             }
           }
           //filelist has now been created
@@ -144,13 +144,14 @@ namespace DropIt
       //now send the File
       File = enc.EncryptFile(File);
       Server.Send(File);
+      return true;
     }
     public bool Download(ref int state, string FileName, ref byte[] returnValue)
     {
       //create the request for the server
       string Message = "{DW}" + FileName + "\n";
       ASCIIEncoding en = new ASCIIEncoding();
-      string[] sendableMessage = en.GetBytes(Message);
+      byte[] sendableMessage = en.GetBytes(Message);
       Server.Send(sendableMessage);
       //now wait for the answer of the server
       byte[] ServerAnswerInByte = new byte[100];
@@ -182,7 +183,7 @@ namespace DropIt
           state = (currentReceivedSize/LenghtOfFile) * 100;
         }
         //file is now on this device
-        returnValue = enc.DecryptFile(File);
+        returnValue = enc.EncryptFile(File);
         return true;
 
       }
@@ -198,7 +199,7 @@ namespace DropIt
       string current = "";
       for(int i = 0; i < Message.Length; i++)
       {
-        if(Message[i] == "\n")
+        if(Message[i] == '\n')
         {
           //Save it to the array
           string[] backup = returnValue;
