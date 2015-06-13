@@ -7,3 +7,4 @@ Z:\Documents\GitHub Projects\DropIt\DropIt\Client\ClientUI\DropIt\DropIt\obj\x86
 Z:\Documents\GitHub Projects\DropIt\DropIt\Client\ClientUI\DropIt\DropIt\obj\x86\Debug\DropIt.Form1.resources
 Z:\Documents\GitHub Projects\DropIt\DropIt\Client\ClientUI\DropIt\DropIt\obj\x86\Debug\DropIt.csprojResolveAssemblyReference.cache
 Z:\Documents\GitHub Projects\DropIt\DropIt\Client\ClientUI\DropIt\DropIt\obj\x86\Debug\DropIt.MainMenu.resources
+Z:\Documents\GitHub Projects\DropIt\DropIt\Client\ClientUI\DropIt\DropIt\obj\x86\Debug\DropIt.DownloadForm.resources

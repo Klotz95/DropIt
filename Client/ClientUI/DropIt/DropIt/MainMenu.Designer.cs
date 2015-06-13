@@ -57,6 +57,7 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(200, 100);
             this.panel3.TabIndex = 2;
+            this.panel3.Click += new System.EventHandler(this.panel3_Click);
             // 
             // MainMenu
             // 

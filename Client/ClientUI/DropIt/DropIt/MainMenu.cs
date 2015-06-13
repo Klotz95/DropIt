@@ -70,6 +70,7 @@ namespace DropIt
             add.Width = 100;
             add.Location = new Point(panel3.Width/4 - panel3.Width/4/2 - add.Width/2,0);
             panel3.Controls.Add(add);
+            add.Click += new EventHandler(panel3_Click);
             //label for add
             PictureBox addlabel = new PictureBox();
             Bitmap addText = new Bitmap(40, 30);
@@ -88,6 +89,7 @@ namespace DropIt
             downLoad.Width = 100;
             downLoad.Location = new Point(panel3.Width / 2 - panel3.Width /8 - downLoad.Width/2, 0);
             panel3.Controls.Add(downLoad);
+            downLoad.Click += new EventHandler(panel3_Click);
             //label for downLoad
             PictureBox DownLoadLabel = new PictureBox();
             Bitmap DownloadText = new Bitmap(100,30);
@@ -106,6 +108,7 @@ namespace DropIt
             Open.Width = 100;
             Open.Location = new Point((panel3.Width * 3/4) - panel3.Width/8 - Open.Width/2,0);
             panel3.Controls.Add(Open);
+            Open.Click += new EventHandler(panel3_Click);
             //label for open
             PictureBox OpenLabel = new PictureBox();
             Bitmap OpenText = new Bitmap(60,30);
@@ -124,6 +127,7 @@ namespace DropIt
             Logout.Width = 100;
             Logout.Location = new Point(panel3.Width - panel3.Width/8 - Logout.Width/2,0);
             panel3.Controls.Add(Logout);
+            Logout.Click += new EventHandler(panel3_Click);
             //Label for Logout
             PictureBox LogoutLabel = new PictureBox();
             Bitmap LogoutText = new Bitmap(100,30);
@@ -223,6 +227,43 @@ namespace DropIt
         private void panel1_MouseEnter(object sender, EventArgs e)
         {
             panel1.Focus();
+        }
+        private void panel3_Click(object sender, EventArgs e)
+        {
+            //look which menu point was clicked
+            Point CurrentWindowLocation = this.Location;
+            Point MouseP = MousePosition;
+            MouseP.X -= CurrentWindowLocation.X + SystemInformation.BorderSize.Width;
+            MouseP.Y -= CurrentWindowLocation.Y + SystemInformation.CaptionHeight + SystemInformation.BorderSize.Height;
+            int width = panel3.Width / 4;
+            int index = 4;
+            for (int i = 0; i < 4; i++)
+            {
+                if (MouseP.X > i * width && MouseP.X <= (i + 1) * width)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            switch (index)
+            {
+                case 0: //add button
+                    MessageBox.Show("add");
+                    break;
+                case 1: //download
+                    MessageBox.Show("Download");
+                    DownloadForm dw = new DownloadForm();
+                    dw.Show();
+                    break;
+
+                case 2: //open
+                    MessageBox.Show("Open");
+                    break;
+                case 3: //Logout
+                    MessageBox.Show("Logout");
+                    Application.Exit();
+                    break;
+            }
         }
     }
 }
