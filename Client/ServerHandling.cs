@@ -31,6 +31,7 @@ namespace DropIt
       catch
       {
         connected = false;
+        connected = false;
       }
       if(connected)
       {
